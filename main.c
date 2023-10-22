@@ -45,7 +45,23 @@ int main(int argc, char *argv[]) {
                 totalLines++;
         }
     
-        printf("%d %s", totalLines, filename);
+        printf("%d %s\n", totalLines, filename);
+        return 0;
+    }
+    else if(strcmp(option, "-w")) {
+        FILE *file = fopen(filename, "r");
+        if(file == NULL) { 
+            perror("Error opening file");
+            return 1;            
+        }
+
+        char c;
+        int totalWords = 0;
+        while((c = fgetc(file)) != EOF) {
+            if(c == ' ' || c == '\n')
+                totalWords++;    
+        }
+        printf("%d %s\n", totalWords, filename);
         return 0;
     }
 
