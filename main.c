@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdbool.h>
 
 int main(int argc, char *argv[]) {
     if(argc < 3) {
@@ -12,8 +13,8 @@ int main(int argc, char *argv[]) {
 
     char *option = argv[1];
     char *filename = argv[2];
-    
-    if(strcmp(option, "-c")) { 
+   
+    if(strcmp(option, "-c") == 0) { 
         int fd = open(filename, O_RDONLY);
         if(fd <0) {
             perror("Error opening file");
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    else if(strcmp(option, "-l")) {
+    else if(strcmp(option, "-l") == 0) {
         FILE *file = fopen(filename, "r");
         if(file == NULL) {
             perror("Error opening file");
@@ -48,7 +49,7 @@ int main(int argc, char *argv[]) {
         printf("%d %s\n", totalLines, filename);
         return 0;
     }
-    else if(strcmp(option, "-w")) {
+    else if(strcmp(option, "-w") == 0) {
         FILE *file = fopen(filename, "r");
         if(file == NULL) { 
             perror("Error opening file");
@@ -57,14 +58,22 @@ int main(int argc, char *argv[]) {
 
         char c;
         int totalWords = 0;
+        bool inWord = false;
         while((c = fgetc(file)) != EOF) {
-            if(c == ' ' || c == '\n')
-                totalWords++;    
+            if (!(c == ' ' || c == '\n' || c == '\t')) {
+                inWord = true;
+            }
+            else {
+                if(inWord) {
+                    inWord = false; 
+                    totalWords++;
+                }
+            }
         }
         printf("%d %s\n", totalWords, filename);
         return 0;
     }
 
-    fprintf(stderr, "Usage: %s -c <filename>", argv[0]);
+    fprintf(stderr, "Usage: %s -c || -l || -w <filename>", argv[0]);
     return 1;
 }
