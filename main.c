@@ -73,6 +73,24 @@ int main(int argc, char *argv[]) {
         printf("%d %s\n", totalWords, filename);
         return 0;
     }
+    else if(strcmp(option, "-m") == 0) {
+        FILE *file = fopen(filename, "r");
+        if(file == NULL) { 
+            perror("Error opening file");
+            return 1;            
+        }
+
+        char c;
+        int totalChars = 0;
+        while((c = fgetc(file)) != EOF) {
+            if (!(c == ' ' || c == '\n' || c == '\t')) {
+                totalChars++;
+            }
+        }
+        
+        printf("%d %s\n", totalChars, filename);
+        return 0;
+    }
 
     fprintf(stderr, "Usage: %s -c || -l || -w <filename>", argv[0]);
     return 1;
